@@ -28,45 +28,74 @@ namespace ExoApi.Controllers
         [HttpPost]
         public IActionResult Cadastrar(Projeto projeto)
         {
-            _projetoResposiory.Cadastrar(projeto);
-            return StatusCode(201);
+            try
+            {
+                _projetoResposiory.Cadastrar(projeto);
+                return StatusCode(201);
+            } 
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         [Authorize]
         [HttpPut("{Id}")]
         public IActionResult Atualizar(int Id, Projeto projeto)
         {
-            _projetoResposiory.Atualizar(Id, projeto);
-            return StatusCode(204);
+            try
+            {
+                _projetoResposiory.Atualizar(Id, projeto);
+                return StatusCode(204);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [Authorize]
         [HttpGet("{Id}")]
         public IActionResult BuscarPorId(int Id)
         {
-            Projeto projeto = _projetoResposiory.BuscarPorId(Id); 
-
-            if (projeto == null)
+            try
             {
-                return NotFound();
-            }
+                Projeto projeto = _projetoResposiory.BuscarPorId(Id);
 
-            return Ok(projeto);
+                if (projeto == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(projeto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [Authorize]
         [HttpDelete("{Id}")]
         public IActionResult Deletar(int Id)
         {
-            Projeto projeto = _projetoResposiory.BuscarPorId(Id);
+            try
+            {
+                Projeto projeto = _projetoResposiory.BuscarPorId(Id);
 
-            if (projeto == null)
+                if (projeto == null)
+                {
+                    return NotFound();
+                } else
+                {
+                    _projetoResposiory.Deletar(Id);
+                    return StatusCode(204);
+                }
+            }
+            catch (Exception ex)
             {
-                return NotFound();
-            } else
-            {
-                _projetoResposiory.Deletar(Id);
-                return StatusCode(204);
+                return BadRequest(ex.Message);
             }
         }
 

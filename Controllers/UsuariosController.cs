@@ -27,46 +27,74 @@ namespace ExoApi.Controllers
         [HttpPost]
         public IActionResult Cadastrar(Usuario usuario)
         {
-            _usuarioRepository.Cadastrar(usuario);
-            return StatusCode(201);
+            try
+            {
+                _usuarioRepository.Cadastrar(usuario);
+                return StatusCode(201);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [Authorize]
         [HttpPut("{Id}")]
         public IActionResult Atualizar(int Id, Usuario usuario)
         {
-            _usuarioRepository.Atualizar(Id, usuario);
-            return StatusCode(204);
+            try
+            {
+                _usuarioRepository.Atualizar(Id, usuario);
+                return StatusCode(204);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [Authorize]
         [HttpGet("{Id}")]
         public IActionResult BuscarPorId(int Id)
         {
-            Usuario usuario = _usuarioRepository.BuscarPorId(Id);   
-
-            if (usuario == null)
+            try
             {
-                return NotFound();
-            }
+                Usuario usuario = _usuarioRepository.BuscarPorId(Id);
 
-            return Ok(usuario);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(usuario);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [Authorize]
         [HttpDelete("{Id}")]
         public IActionResult Deletar(int Id)
         {
-            Usuario usuario = _usuarioRepository.BuscarPorId(Id);
+            try
+            {
+                Usuario usuario = _usuarioRepository.BuscarPorId(Id);
 
-            if (usuario == null)
-            {
-                return NotFound();
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    _usuarioRepository.Deletar(Id);
+                    return StatusCode(204);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _usuarioRepository.Deletar(Id);
-                return StatusCode(204);
+                return BadRequest(ex.Message);
             }
         }
     }
